@@ -1,0 +1,119 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  font-size: calc(10px + 2vmin);
+}
+
+main {
+  padding: 2rem;
+  background-color: rgb(207, 225, 243);
+}
+body {
+  margin: 0;
+  background-color: rgb(35, 52, 68); /* or any color you like 207, 225, 243); */
+  color: white;
+  font-family: sans-serif;
+}
+
+.user-info {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.message-section {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #444;
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+.message-section h3 {
+  margin-top: 0;
+  color: #61dafb;
+}
+
+.message-input {
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  width: 250px;
+}
+
+.add-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #61dafb;
+  color: #282c34;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-button:hover {
+  background-color: #21a4c7;
+}
+
+.messages-section {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #444;
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+.messages-section h3 {
+  margin-top: 0;
+  color: #61dafb;
+}
+
+.messages-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.messages-list li {
+  background-color: #555;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.menu-bar {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.menu-bar li {
+  display: inline;
+}
+
+.menu-bar a {
+  color: #61dafb;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.2s ease-in-out;
+}
+
+.menu-bar a:hover {
+  color: #21a4c7;
+  text-decoration: underline;
+}
