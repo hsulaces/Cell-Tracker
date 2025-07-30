@@ -8,8 +8,9 @@ import Home from './pages/Home';
 import Cell_tracking from './pages/Cell_tracking';
 import Protocols from './pages/Protocols';
 import Variant_helper from './pages/Variant_helper';
-import Services from './pages/Services';
+import Research from './pages/Research';
 import './App.css';
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
@@ -21,15 +22,17 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <h1>Lee Lab Website 🧪</h1>
           <nav>
             <ul className="menu-bar">
               <li><Link to="/">Home</Link></li>
               <li><Link to="/cell-tracking">Cell Tracking</Link></li>
               <li><Link to="/protocols">Protocols</Link></li>
               <li><Link to="/variant-helper">Variant Helper</Link></li>
-              <li><Link to="/services">Services</Link></li>
+              <li><Link to="/research">Research</Link></li>
             </ul>
+            <button className="login-btn" onClick={() => alert("Login coming soon!")}>
+              Login
+            </button>
           </nav>
         </header>
 
@@ -38,7 +41,7 @@ function App() {
           <Route path="/cell-tracking" element={<Cell_tracking />} />
           <Route path="/protocols" element={<Protocols />} />
           <Route path="/variant-helper" element={<Variant_helper />} />
-          <Route path="/services" element={<Services />} />
+          <Route path="/research" element={<Research />}/>
         </Routes>
 
       </div>
