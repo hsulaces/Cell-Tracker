@@ -14,7 +14,7 @@ router.get('/cadd-score', async (req, res) => {
   const [chrom, pos, ref, alt] = variant.split('-');
 
   // Format for the CADD API ver 1.7
-  const caddUrl = `https://cadd.gs.washington.edu/api/v1.0/v1.7/${chrom}:${pos}-${ref}-${alt}`;
+  const caddUrl = `https://cadd.gs.washington.edu/api/v1.0/v1.7/${chrom}:${pos}_${ref}_${alt}`;
 
   try {
     const caddRes = await fetch(caddUrl);
