@@ -1,0 +1,13 @@
+// tsconfig.server.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",         // compatible w/ backend ts-node
+    "module": "ESNext",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/server.ts", "src/api/**/*.ts"]
+}
