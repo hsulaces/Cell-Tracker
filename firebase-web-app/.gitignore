@@ -153,8 +153,16 @@ coverage/
 *.backup
 *.bak
 
+#env
+.env/
+
 #photos
 img/
+
+#testing files
+src/api/alpha_genome.py
+alphagenome/
+.venv/
 
 # Package lock files (choose one)
 # package-lock.json

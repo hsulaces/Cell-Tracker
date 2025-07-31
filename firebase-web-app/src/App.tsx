@@ -5,10 +5,11 @@ import { getAuth, signInAnonymously, onAuthStateChanged, User } from 'firebase/a
 import firebaseConfig from './firebase/config';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
+import Research from './pages/Research';
+import Publications from './pages/Publications';
 import Cell_tracking from './pages/Cell_tracking';
 import Protocols from './pages/Protocols';
 import Variant_helper from './pages/Variant_helper';
-import Research from './pages/Research';
 import './App.css';
 
 
@@ -24,11 +25,12 @@ function App() {
         <header className="App-header">
           <nav>
             <ul className="menu-bar">
-              <li><Link to="/">Home</Link></li>
+              <li><Link to="/">About</Link></li>
+              <li><Link to="/research">Research</Link></li>
+              <li><Link to="/publications">Publications</Link></li>
               <li><Link to="/cell-tracking">Cell Tracking</Link></li>
               <li><Link to="/protocols">Protocols</Link></li>
               <li><Link to="/variant-helper">Variant Helper</Link></li>
-              <li><Link to="/research">Research</Link></li>
             </ul>
             <button className="login-btn" onClick={() => alert("Login coming soon!")}>
               Login
@@ -38,10 +40,11 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/research" element={<Research />}/>
+          <Route path="/publications" element={<Publications />}/>
           <Route path="/cell-tracking" element={<Cell_tracking />} />
           <Route path="/protocols" element={<Protocols />} />
           <Route path="/variant-helper" element={<Variant_helper />} />
-          <Route path="/research" element={<Research />}/>
         </Routes>
 
       </div>

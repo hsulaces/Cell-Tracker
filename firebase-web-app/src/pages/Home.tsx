@@ -6,7 +6,7 @@ function Home() {
     <div className="hero-container">
         <div className="hero-overlay">
           <h1>
-            Lee Labratory
+            Lee Lab
           </h1>
         </div>
     </div>

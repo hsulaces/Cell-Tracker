@@ -20,8 +20,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    "rootDir": "src",
+    "outDir": "dist"
   },
-  "include": ["src"],
+  "include": ["src", "tsconfig.server.json"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
