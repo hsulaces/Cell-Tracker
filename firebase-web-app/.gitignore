@@ -157,7 +157,7 @@ coverage/
 .env/
 
 #photos
-img/
+# img/
 
 #testing files
 src/api/alpha_genome.py
