@@ -11,6 +11,7 @@ import Cell_tracking from './pages/Cell_tracking';
 import Protocols from './pages/Protocols';
 import Variant_helper from './pages/Variant_helper';
 import './App.css';
+import Login from './pages/Login';
 
 
 // Initialize Firebase
@@ -31,6 +32,7 @@ function App() {
               <li><Link to="/cell-tracking">Cell Tracking</Link></li>
               <li><Link to="/protocols">Protocols</Link></li>
               <li><Link to="/variant-helper">Variant Helper</Link></li>
+               <li><Link to="/login">Lee Lab Login</Link></li>
             </ul>
             <button className="login-btn" onClick={() => alert("Login coming soon!")}>
               Login
@@ -45,6 +47,7 @@ function App() {
           <Route path="/cell-tracking" element={<Cell_tracking />} />
           <Route path="/protocols" element={<Protocols />} />
           <Route path="/variant-helper" element={<Variant_helper />} />
+          <Route path="/login" element={<Login/>} />
         </Routes>
 
       </div>
