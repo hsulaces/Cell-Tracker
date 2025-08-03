@@ -228,7 +228,7 @@ const handleUpdateCellLine = () => {
               </div>
               <div>
                 <Label htmlFor="type">Type</Label>
-                <Select value={newCellLine.type} onValueChange={(value) => setNewCellLine({...newCellLine, type: value})}>
+                <Select value={newCellLine.type} onValueChange={(value : string) => setNewCellLine({...newCellLine, type: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select cell type" />
                   </SelectTrigger>
