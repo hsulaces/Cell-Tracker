@@ -14,13 +14,15 @@ router.get('/cadd-score', async (req, res) => {
   const [chrom, pos, ref, alt] = variant.split('-');
 
   // Format for the CADD API ver 1.7
-  const caddUrl = `https://cadd.gs.washington.edu/api/v1.0/v1.7/${chrom}:${pos}_${ref}_${alt}`;
+  const caddUrl = `https://cadd.gs.washington.edu/api/v1.0/GRCh38-v1.7/${chrom}:${pos}_${ref}_${alt}`;
+  // https://cadd.gs.washington.edu/api/v1.0/GRCh38-v1.7/16:11255334_C_A SOCS1 A49S WORKS BTW
+  console.log(caddUrl);
 
   try {
     const caddRes = await fetch(caddUrl);
     if (!caddRes.ok) throw new Error(`CADD API error: ${caddRes.status}`);
 
-    const data = await caddRes.json(); // this is an array of results
+    const data = await caddRes.json(); // an array of results
     return res.json(data);
   } catch (err) {
     console.error(err);
