@@ -127,9 +127,9 @@ const [newCellLine, setNewCellLine] = useState<CellLineFormState>({
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'healthy': return <Badge className="bg-green-100 text-green-800">Healthy</Badge>;
-      case 'ready-passage': return <Badge className="bg-orange-100 text-orange-800">Ready for Passage</Badge>;
-      case 'slow-growth': return <Badge className="bg-yellow-100 text-yellow-800">Slow Growth</Badge>;
+      case 'healthy': return <Badge className="bg-green-500/20 text-green-300 border-green-500/30">Healthy</Badge>;
+      case 'ready-passage': return <Badge className="bg-orange-500/20 text-orange-300 border-orange-500/30">Ready for Passage</Badge>;
+      case 'slow-growth': return <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Slow Growth</Badge>;
       default: return <Badge variant="secondary">Unknown</Badge>;
     }
   };
@@ -196,7 +196,13 @@ const handleUpdateCellLine = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div className="min-h-screen relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(59,130,246,0.3)_0%,transparent_50%),radial-gradient(circle_at_75%_75%,rgba(147,197,253,0.2)_0%,transparent_50%)]"></div>
+    </div>
+
+    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -207,32 +213,33 @@ const handleUpdateCellLine = () => {
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
+            <Button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg">
               <Plus className="w-4 h-4" />
               Add Cell Line
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md bg-slate-800/95 backdrop-blur-md border border-slate-600 shadow-xl">
             <DialogHeader>
               <DialogTitle>Add New Cell Line</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="name">Cell Line Name</Label>
+                <Label htmlFor="name" className="text-slate-200">Cell Line Name</Label>
                 <Input
                   id="name"
                   value={newCellLine.name}
                   onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
                   placeholder="e.g., HeLa-005"
+                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
               <div>
-                <Label htmlFor="type">Type</Label>
+                <Label htmlFor="type" className="text-slate-200">Type</Label>
                 <Select value={newCellLine.type} onValueChange={(value : string) => setNewCellLine({...newCellLine, type: value})}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
                     <SelectValue placeholder="Select cell type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-slate-800 border-slate-600">
                     <SelectItem value="Immortalized">Immortalized</SelectItem>
                     <SelectItem value="Cancer Cell Line">Cancer Cell Line</SelectItem>
                     <SelectItem value="Primary Culture">Primary Culture</SelectItem>
@@ -243,17 +250,18 @@ const handleUpdateCellLine = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="passage">Passage #</Label>
+                  <Label htmlFor="passage" className="text-slate-200">Passage #</Label>
                   <Input
                     id="passage"
                     type="number"
                     value={newCellLine.passage}
                     onChange={(e) => setNewCellLine({...newCellLine, passage: e.target.value})}
                     placeholder="0"
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="confluence">Confluence %</Label>
+                  <Label htmlFor="confluence" className="text-slate-200">Confluence %</Label>
                   <Input
                     id="confluence"
                     type="number"
@@ -261,11 +269,12 @@ const handleUpdateCellLine = () => {
                     value={newCellLine.confluence}
                     onChange={(e) => setNewCellLine({...newCellLine, confluence: e.target.value})}
                     placeholder="0"
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                   />
                 </div>
               </div>
               <div>
-                <Label htmlFor="growthRate">Growth Rate</Label>
+                <Label htmlFor="growthRate" className="text-slate-200">Growth Rate</Label>
                 <Input
                   id="growthRate"
                   type="number"
@@ -273,27 +282,30 @@ const handleUpdateCellLine = () => {
                   value={newCellLine.growthRate}
                   onChange={(e) => setNewCellLine({...newCellLine, growthRate: e.target.value})}
                   placeholder="1.0"
+                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
               <div>
-                <Label htmlFor="medium">Culture Medium</Label>
+                <Label htmlFor="medium" className="text-slate-200">Culture Medium</Label>
                 <Input
                   id="medium"
                   value={newCellLine.medium}
                   onChange={(e) => setNewCellLine({...newCellLine, medium: e.target.value})}
                   placeholder="e.g., DMEM + 10% FBS"
+                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
               <div>
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes" className="text-slate-200">Notes</Label>
                 <Input
                   id="notes"
                   value={newCellLine.notes}
                   onChange={(e) => setNewCellLine({...newCellLine, notes: e.target.value})}
                   placeholder="Optional notes"
+                  className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                 />
               </div>
-              <Button onClick={handleAddCellLine} className="w-full">
+              <Button onClick={handleAddCellLine} className="w-full bg-blue-600 hover:bg-blue-500">
                 Add Cell Line
               </Button>
             </div>
@@ -304,7 +316,7 @@ const handleUpdateCellLine = () => {
       {/* Overview Cards */}
       <div className="container mx-auto px-8 max-w-6xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 py-4">
-          <Card className="p-8 shadow-sm border">
+<           Card className="p-8 shadow-sm border bg-white/10 backdrop-blur-md border-white/20 rounded-xl">
             <div className="flex items-center">
               <div className="p-3 bg-primary/10 rounded-lg mr-6">
                 <Activity className="w-6 h-6 text-primary" />
@@ -316,7 +328,8 @@ const handleUpdateCellLine = () => {
             </div>
           </Card>
           
-          <Card className="p-8 shadow-sm border">
+          <Card className="p-8 shadow-sm border bg-white/10 backdrop-blur-md border-white/20 rounded-xl">
+
             <div className="flex items-center">
               <div className="p-3 bg-green-100 rounded-lg mr-6">
                 <TrendingUp className="w-6 h-6 text-green-600" />
@@ -328,7 +341,7 @@ const handleUpdateCellLine = () => {
             </div>
           </Card>
           
-          <Card className="p-8 shadow-sm border">
+          <Card className="p-8 shadow-sm border bg-white/10 backdrop-blur-md border-white/20 rounded-xl">
             <div className="flex items-center">
               <div className="p-3 bg-orange-100 rounded-lg mr-6">
                 <AlertTriangle className="w-6 h-6 text-orange-600" />
@@ -340,7 +353,7 @@ const handleUpdateCellLine = () => {
             </div>
           </Card>
           
-          <Card className="p-8 shadow-sm border">
+          <Card className="p-8 shadow-sm border bg-white/10 backdrop-blur-md border-white/20 rounded-xl">
             <div className="flex items-center">
               <div className="p-3 bg-blue-100 rounded-lg mr-6">
                 <div className="w-6 h-6 bg-blue-600 rounded"></div>
@@ -355,7 +368,7 @@ const handleUpdateCellLine = () => {
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card className="p-6">
+          <Card className="p-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl">
             <h3 className="mb-4">Growth Progress (Last 6 Days)</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={growthData}>
@@ -368,7 +381,7 @@ const handleUpdateCellLine = () => {
             </ResponsiveContainer>
           </Card>
           
-          <Card className="p-6">
+          <Card className="p-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl">
             <h3 className="mb-4">Passage Numbers by Cell Line</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={passageData}>
@@ -384,7 +397,7 @@ const handleUpdateCellLine = () => {
       </div>
 
       {/* Cell Lines Table */}
-      <Card className="p-6">
+      <Card className="p-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl">
         <h3 className="mb-4">Cell Lines Overview</h3>
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -441,45 +454,49 @@ const handleUpdateCellLine = () => {
       </Card>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Cell Line</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="edit-name">Cell Line Name</Label>
-              <Input
-                id="edit-name"
-                value={newCellLine.name}
-                onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
-              />
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-md bg-slate-800/95 backdrop-blur-md border-slate-600">
+            <DialogHeader>
+              <DialogTitle className="text-white">Edit Cell Line</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-name" className="text-slate-200">Cell Line Name</Label>
+                <Input
+                  id="edit-name"
+                  value={newCellLine.name}
+                  onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
+                  className="bg-slate-700/50 border-slate-600 text-white"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-confluence" className="text-slate-200">Confluence %</Label>
+                <Input
+                  id="edit-confluence"
+                  type="number"
+                  max="100"
+                  value={newCellLine.confluence}
+                  onChange={(e) => setNewCellLine({...newCellLine, confluence: e.target.value})}
+                  className="bg-slate-700/50 border-slate-600 text-white"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-notes" className="text-slate-200">Notes</Label>
+                <Input
+                  id="edit-notes"
+                  value={newCellLine.notes}
+                  onChange={(e) => setNewCellLine({...newCellLine, notes: e.target.value})}
+                  className="bg-slate-700/50 border-slate-600 text-white"
+                />
+              </div>
+              <Button onClick={handleUpdateCellLine} className="w-full bg-blue-600 hover:bg-blue-500">
+                Update Cell Line
+              </Button>
             </div>
-            <div>
-              <Label htmlFor="edit-confluence">Confluence %</Label>
-              <Input
-                id="edit-confluence"
-                type="number"
-                max="100"
-                value={newCellLine.confluence}
-                onChange={(e) => setNewCellLine({...newCellLine, confluence: e.target.value})}
-              />
-            </div>
-            <div>
-              <Label htmlFor="edit-notes">Notes</Label>
-              <Input
-                id="edit-notes"
-                value={newCellLine.notes}
-                onChange={(e) => setNewCellLine({...newCellLine, notes: e.target.value})}
-              />
-            </div>
-            <Button onClick={handleUpdateCellLine} className="w-full">
-              Update Cell Line
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
     </div>
+  </div>
   );
 }
 
