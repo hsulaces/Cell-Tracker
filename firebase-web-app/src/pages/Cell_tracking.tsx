@@ -200,9 +200,9 @@ const handleUpdateCellLine = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="mb-2">Cell Line Management Dashboard</h1>
+          <h1 className="mb-2">Cell Line Tracker Dashboard</h1>
           <p className="text-muted-foreground">
-            Monitor and manage your cell lines with real-time growth metrics and analytics.
+            Keep track of your cell lines with real-time growth metrics and analytics!
           </p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -302,83 +302,85 @@ const handleUpdateCellLine = () => {
       </div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card className="p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-primary/10 rounded-lg mr-4">
-              <Activity className="w-6 h-6 text-primary" />
+      <div className="container mx-auto px-8 max-w-6xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 py-4">
+          <Card className="p-8 shadow-sm border">
+            <div className="flex items-center">
+              <div className="p-3 bg-primary/10 rounded-lg mr-6">
+                <Activity className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total Cell Lines</p>
+                <p className="text-2xl">{cellLines.length}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Total Cell Lines</p>
-              <p className="text-2xl">{cellLines.length}</p>
+          </Card>
+          
+          <Card className="p-8 shadow-sm border">
+            <div className="flex items-center">
+              <div className="p-3 bg-green-100 rounded-lg mr-6">
+                <TrendingUp className="w-6 h-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Healthy Lines</p>
+                <p className="text-2xl">{cellLines.filter(c => c.status === 'healthy').length}</p>
+              </div>
             </div>
-          </div>
-        </Card>
-        
-        <Card className="p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg mr-4">
-              <TrendingUp className="w-6 h-6 text-green-600" />
+          </Card>
+          
+          <Card className="p-8 shadow-sm border">
+            <div className="flex items-center">
+              <div className="p-3 bg-orange-100 rounded-lg mr-6">
+                <AlertTriangle className="w-6 h-6 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Need Attention</p>
+                <p className="text-2xl">{cellLines.filter(c => c.status !== 'healthy').length}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Healthy Lines</p>
-              <p className="text-2xl">{cellLines.filter(c => c.status === 'healthy').length}</p>
+          </Card>
+          
+          <Card className="p-8 shadow-sm border">
+            <div className="flex items-center">
+              <div className="p-3 bg-blue-100 rounded-lg mr-6">
+                <div className="w-6 h-6 bg-blue-600 rounded"></div>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Avg Confluence</p>
+                <p className="text-2xl">{Math.round(cellLines.reduce((acc, c) => acc + c.confluence, 0) / cellLines.length)}%</p>
+              </div>
             </div>
-          </div>
-        </Card>
-        
-        <Card className="p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-orange-100 rounded-lg mr-4">
-              <AlertTriangle className="w-6 h-6 text-orange-600" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Need Attention</p>
-              <p className="text-2xl">{cellLines.filter(c => c.status !== 'healthy').length}</p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg mr-4">
-              <div className="w-6 h-6 bg-blue-600 rounded"></div>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Avg Confluence</p>
-              <p className="text-2xl">{Math.round(cellLines.reduce((acc, c) => acc + c.confluence, 0) / cellLines.length)}%</p>
-            </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
 
-      {/* Charts Section */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        <Card className="p-6">
-          <h3 className="mb-4">Growth Progress (Last 6 Days)</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={growthData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="confluence" stroke="#3b82f6" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </Card>
-        
-        <Card className="p-6">
-          <h3 className="mb-4">Passage Numbers by Cell Line</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={passageData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="passages" fill="#3b82f6" />
-            </BarChart>
-          </ResponsiveContainer>
-        </Card>
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <Card className="p-6">
+            <h3 className="mb-4">Growth Progress (Last 6 Days)</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={growthData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="confluence" stroke="#3b82f6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+          
+          <Card className="p-6">
+            <h3 className="mb-4">Passage Numbers by Cell Line</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={passageData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="passages" fill="#3b82f6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
       </div>
 
       {/* Cell Lines Table */}
