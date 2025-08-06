@@ -24,19 +24,18 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <nav>
-            <ul className="menu-bar">
+          <nav className="flex items-center justify-between px-4 py-2 bg-darkBlue">
+            <ul className="flex gap-6 text-sky-300 font-bold text-base">
               <li><Link to="/">About</Link></li>
               <li><Link to="/research">Research</Link></li>
               <li><Link to="/publications">Publications</Link></li>
               <li><Link to="/cell-tracking">Cell Tracking</Link></li>
               <li><Link to="/protocols">Protocols</Link></li>
               <li><Link to="/variant-helper">Variant Helper</Link></li>
-               <li><Link to="/login">Lee Lab Login</Link></li>
             </ul>
-            <button className="login-btn" onClick={() => alert("Login coming soon!")}>
-              Login
-            </button>
+            <Link to="/login" className="login-btn ml-auto">
+            Login
+            </Link>
           </nav>
         </header>
 
