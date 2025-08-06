@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './Publications.css';
 import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Search, Calendar, Users, BookOpen } from 'lucide-react';
