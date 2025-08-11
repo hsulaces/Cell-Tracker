@@ -22,7 +22,7 @@ type CellLine = {
   status: string;
   medium: string;
   notes: string;
-  reporters?: string[];
+  reporters: string[];
 };
 
 type CellLineFormState = {
@@ -32,6 +32,7 @@ type CellLineFormState = {
   confluence: string;
   growthRate: string;
   medium: string;
+  reporters: string[];
   notes: string;
 };
 
@@ -62,7 +63,7 @@ const WeeklyCalendar = ({ cellLines }: { cellLines: any[] }) => {
     cellLines.forEach(cell => {
       const lastPassage = new Date(cell.lastPassageDate);
       const estimatedNext = new Date(lastPassage);
-      estimatedNext.setDate(lastPassage.getDate() + 7); // Assume 7-day cycle
+      estimatedNext.setDate(lastPassage.getDate() + 7); // assume a 7-day cycle
       
       const weekDays = getWeekDays();
       weekDays.forEach(day => {
@@ -258,46 +259,7 @@ export function CellTrackingPage() {
     },
     {
       id: 2,
-      name: "MCF7-002",
-      type: "Cancer Cell Line",
-      passage: 18,
-      confluence: 95,
-      growthRate: 0.8,
-      lastPassageDate: "2024-01-25",
-      medium: "RPMI",
-      reporters: ["NFkB"],
-      status: "ready-passage",
-      notes: "High confluence, passage today"
-    },
-    {
-      id: 3,
-      name: "Primary-003",
-      type: "Primary Culture",
-      passage: 5,
-      confluence: 60,
-      growthRate: 0.6,
-      lastPassageDate: "2024-01-30",
-      medium: "Custom",
-      reporters: [],
-      status: "slow-growth",
-      notes: "Slower than expected growth, monitor closely"
-    },
-    {
-      id: 4,
-      name: "HUVEC-004",
-      type: "Endothelial",
-      passage: 12,
-      confluence: 75,
-      growthRate: 1.1,
-      lastPassageDate: "2024-01-29",
-      medium: "EGM-2",
-      reporters: ["ISRE"],
-      status: "healthy",
-      notes: "Normal growth pattern"
-    },
-    {
-      id: 5,
-      name: "293T-005",
+      name: "HEK 293T",
       type: "Immortalized",
       passage: 31,
       confluence: 90,
@@ -322,6 +284,7 @@ const [newCellLine, setNewCellLine] = useState<CellLineFormState>({
   confluence: "",
   growthRate: "",
   medium: "",
+  reporters: [],
   notes: "",
 });
 
@@ -411,6 +374,7 @@ const [newCellLine, setNewCellLine] = useState<CellLineFormState>({
       confluence: "",
       growthRate: "",
       medium: "",
+      reporters: [],
       notes: ""
     });
     setIsAddDialogOpen(false);
@@ -425,6 +389,7 @@ const [newCellLine, setNewCellLine] = useState<CellLineFormState>({
       confluence: cellLine.confluence.toString(),
       growthRate: cellLine.growthRate.toString(),
       medium: cellLine.medium,
+      reporters: cellLine.reporters || [],
       notes: cellLine.notes
     });
     setIsEditDialogOpen(true);
@@ -479,33 +444,36 @@ const handleUpdateCellLine = () => {
             </DialogTrigger>
             <DialogContent className="max-w-md bg-slate-800/95 backdrop-blur-md border-slate-600">
               <DialogHeader>
+                {/* ADD NEW CELLINE FEATURE */}
                 <DialogTitle className="text-white">Add New Cell Line</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name" className="text-slate-200">Cell Line Name</Label>
-                  <Input
-                    id="name"
-                    value={newCellLine.name}
-                    onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
-                    placeholder="e.g., HeLa-006"
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="type" className="text-slate-200">Type</Label>
-                  <Select value={newCellLine.type} onValueChange={(value) => setNewCellLine({...newCellLine, type: value})}>
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue placeholder="Select cell type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-600">
-                      <SelectItem value="Immortalized" className="text-white">Immortalized</SelectItem>
-                      <SelectItem value="Cancer Cell Line" className="text-white">Cancer Cell Line</SelectItem>
-                      <SelectItem value="Primary Culture" className="text-white">Primary Culture</SelectItem>
-                      <SelectItem value="Endothelial" className="text-white">Endothelial</SelectItem>
-                      <SelectItem value="Fibroblast" className="text-white">Fibroblast</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-2 gap-4">  
+                  <div>
+                    <Label htmlFor="name" className="text-slate-200">Cell Line Name</Label>
+                    <Input
+                      id="name"
+                      value={newCellLine.name}
+                      maxLength={30}
+                      onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="type" className="text-slate-200">Type</Label>
+                    <Select value={newCellLine.type} onValueChange={(value) => setNewCellLine({...newCellLine, type: value})}>
+                      <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                        <SelectValue placeholder="Select cell type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="Immortalized" className="text-white">Immortalized</SelectItem>
+                        <SelectItem value="Cancer Cell Line" className="text-white">Cancer Cell Line</SelectItem>
+                        <SelectItem value="Primary Culture" className="text-white">Primary Culture</SelectItem>
+                        <SelectItem value="Endothelial" className="text-white">Endothelial</SelectItem>
+                        <SelectItem value="Fibroblast" className="text-white">Fibroblast</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -551,6 +519,7 @@ const handleUpdateCellLine = () => {
                   <Input
                     id="notes"
                     value={newCellLine.notes}
+                    maxLength={50}
                     onChange={(e) => setNewCellLine({...newCellLine, notes: e.target.value})}
                     placeholder="Optional notes"
                     className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
@@ -794,33 +763,147 @@ const handleUpdateCellLine = () => {
               <DialogTitle className="text-white">Edit Cell Line</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="edit-name" className="text-slate-200">Cell Line Name</Label>
-                <Input
-                  id="edit-name"
-                  value={newCellLine.name}
-                  onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                />
+              <div className="grid grid-cols-2 gap-4">  
+                <div>
+                  <Label htmlFor="edit-name" className="text-slate-200">Cell Line Name</Label>
+                  <Input
+                    id="edit-name"
+                    value={newCellLine.name}
+                    maxLength={30}
+                    onChange={(e) => setNewCellLine({...newCellLine, name: e.target.value})}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+                  <div>
+                    <Label htmlFor="type" className="text-slate-200">Type</Label>
+                    <Select value={newCellLine.type} onValueChange={(value) => setNewCellLine({...newCellLine, type: value})}>
+                      <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                        <SelectValue placeholder="Select cell type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="Immortalized" className="text-white">Immortalized</SelectItem>
+                        <SelectItem value="Cancer Cell Line" className="text-white">Cancer Cell Line</SelectItem>
+                        <SelectItem value="Primary Culture" className="text-white">Primary Culture</SelectItem>
+                        <SelectItem value="Endothelial" className="text-white">Endothelial</SelectItem>
+                        <SelectItem value="Fibroblast" className="text-white">Fibroblast</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">  
+                <div>
+                  <Label htmlFor="edit-passage" className="text-slate-200">Passage #</Label>
+                  <Input
+                    id="edit-passage"
+                    type="number"
+                    value={newCellLine.passage}
+                    onChange={(e) => setNewCellLine({...newCellLine, passage: e.target.value})}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-confluence" className="text-slate-200">Confluence %</Label>
+                  <Input
+                    id="edit-type"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={newCellLine.confluence}
+                    onChange={(e) => setNewCellLine({...newCellLine, confluence: e.target.value})}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
               </div>
               <div>
-                <Label htmlFor="edit-confluence" className="text-slate-200">Confluence %</Label>
-                <Input
-                  id="edit-confluence"
-                  type="number"
-                  max="100"
-                  value={newCellLine.confluence}
-                  onChange={(e) => setNewCellLine({...newCellLine, confluence: e.target.value})}
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                />
+                  <Label htmlFor="edit-medium" className="text-slate-200">Culture Medium</Label>
+                  <Select value={newCellLine.medium} onValueChange={(value) => setNewCellLine({...newCellLine, medium: value})}>
+                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                      <SelectValue placeholder="Select medium" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-600">
+                      <SelectItem value="DMEM" className="text-white">DMEM</SelectItem>
+                      <SelectItem value="RPMI" className="text-white">RPMI</SelectItem>
+                      <SelectItem value="EGM-2" className="text-white">EGM-2</SelectItem>
+                      <SelectItem value="Custom" className="text-white">Custom</SelectItem>
+                    </SelectContent>
+                  </Select>
               </div>
+
+              {/* /REPORTERS EDITTING */}
+              <div className="grid grid-cols-2 gap-4">  
+                <div>
+                  <Label htmlFor="edit-add-reporter" className="text-slate-200">Add Reporter</Label>
+                  {/* Add reporter dropdown - only show if less than 3 reporters */}
+                  {newCellLine.reporters.length < 3 && (
+                    <Select 
+                      value="" 
+                      onValueChange={(value) => {
+                        if (value && !newCellLine.reporters.includes(value)) {
+                          setNewCellLine({
+                            ...newCellLine, 
+                            reporters: [...newCellLine.reporters, value]
+                          });
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white"></SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="Luciferase" className="text-white">Luciferase</SelectItem>
+                        <SelectItem value="GFP" className="text-white">GFP</SelectItem>
+                        <SelectItem value="RFP" className="text-white">RFP</SelectItem>
+                        <SelectItem value="NFKB" className="text-white">NFKB</SelectItem>
+                        <SelectItem value="mCherry" className="text-white">mCherry</SelectItem>
+                        <SelectItem value="YFP" className="text-white">YFP</SelectItem>
+                        <SelectItem value="BFP" className="text-white">BFP</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                  
+                  {newCellLine.reporters.length >= 3 && (
+                    <p className="text-xs text-slate-400">Maximum of 3 reporters allowed</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-reporters" className="text-slate-200">Reporters (max 3)</Label>
+                  <div className="space-y-2">
+                    {/* Current reporters display */}
+                    <div className="flex flex-wrap gap-1 min-h-[32px] p-2 bg-slate-700/50 border border-slate-600 rounded-md">
+                      {newCellLine.reporters.length > 0 ? (
+                        newCellLine.reporters.map((reporter, idx) => (
+                          <Badge 
+                            key={idx} 
+                            className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs flex items-center gap-1"
+                          >
+                            {reporter}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updatedReporters = newCellLine.reporters.filter((_, i) => i !== idx);
+                                setNewCellLine({...newCellLine, reporters: updatedReporters});
+                              }}
+                              className="ml-1 text-purple-200 hover:text-white"
+                            >
+                              ×
+                            </button>
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-slate-400 text-sm">No reporters selected</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <Label htmlFor="edit-notes" className="text-slate-200">Notes</Label>
-                <Input
-                  id="edit-notes"
-                  value={newCellLine.notes}
-                  onChange={(e) => setNewCellLine({...newCellLine, notes: e.target.value})}
-                  className="bg-slate-700/50 border-slate-600 text-white"
+                  <Input
+                    id="edit-notes"
+                    value={newCellLine.notes}
+                    maxLength={50}
+                    onChange={(e) => setNewCellLine({...newCellLine, notes: e.target.value})}
+                    className="bg-slate-700/50 border-slate-600 text-white"
                 />
               </div>
               <Button onClick={handleUpdateCellLine} className="w-full bg-blue-600 hover:bg-blue-500">
