@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
-import { Plus, Edit, Trash2, TrendingUp, Activity, AlertTriangle, CalendarDays, ChevronLeft, ChevronRight} from 'lucide-react';
+import {ChevronLeft, ChevronRight} from 'lucide-react';
 
 interface WeeklyCallProps {
     cellLines: any[]
