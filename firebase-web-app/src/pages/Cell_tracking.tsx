@@ -11,6 +11,7 @@ import { Plus, Edit, Trash2, TrendingUp, Activity, AlertTriangle, CalendarDays, 
 
 import { WeeklyCal } from '../components/cell_tracking/weekly_cal';
 import { OverviewCards } from '../components/cell_tracking/overview_cards';
+import { CellsTable } from '../components/cell_tracking/cells_table';
 
 type CellLine = {
   id: number;
@@ -61,6 +62,7 @@ export function CellTrackingPage() {
       passage: 31,
       confluence: 90,
       growthRate: 1.5,
+      lastUpdate: "2025-08-01",
       lastPassageDate: "2024-01-22",
       medium: "DMEM",
       reporters: ["Luciferase"],
@@ -181,8 +183,9 @@ const handlePassSelectedCells = () => {
       passage: parseInt(newCellLine.passage),
       confluence: parseInt(newCellLine.confluence),
       growthRate: parseFloat(newCellLine.growthRate),
+      lastUpdate: new Date().toISOString().split('T')[0],
       lastPassageDate: new Date().toISOString().split('T')[0],
-      reporters: [],
+      reporters: newCellLine.reporters || [],
       status: parseInt(newCellLine.confluence) > 90 ? 'ready-passage' : 'healthy'
     }]);
     setNewCellLine({
@@ -224,6 +227,7 @@ const handleUpdateCellLine = () => {
           passage: parseInt(newCellLine.passage),
           confluence: parseInt(newCellLine.confluence),
           growthRate: parseFloat(newCellLine.growthRate),
+          lastUpdate: new Date().toISOString().split('T')[0],
           status: parseInt(newCellLine.confluence) > 90 ? 'ready-passage' : 'healthy',
         }
       : cell
@@ -357,107 +361,16 @@ const handleUpdateCellLine = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content Area - Takes up 2/3 of the space */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Main Data Table */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-lg">
-            
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white mb-4">Cell Lines Overview</h3>
-                <Button 
-                  className="flex items-center gap-2 bg-purple-800 hover:bg-purple-600 text-white shadow-lg"
-                  onClick={() => setIsPassDialogOpen(true)}
-                >
-                  <CalendarDays className="w-4 h-4" />
-                  Pass Cells
-                </Button>
-              </div>
-                
-                <div className="rounded-md border border-white/20 overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-b border-white/20 hover:bg-white/5">
-                        <TableHead className="text-blue-200">Actions</TableHead>
-                        <TableHead className="text-blue-200">Cell Line</TableHead>
-                        <TableHead className="text-blue-200">Type</TableHead>
-                        <TableHead className="text-blue-200">Passage</TableHead>
-                        <TableHead className="text-blue-200">Confluence</TableHead>
-                        <TableHead className="text-blue-200">Growth Rate</TableHead>
-                        <TableHead className="text-blue-200">Last Passage</TableHead>
-                        <TableHead className="text-blue-200">Medium</TableHead>
-                        <TableHead className="text-blue-200">Reporters</TableHead>
-                        <TableHead className="text-blue-200">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                  <TableBody>
-                    {cellLines.map((cellLine) => {
-                      const daysSince = getDaysSincePassage(cellLine.lastPassageDate);
-                      return (
-                        <TableRow key={cellLine.id} className="border-b border-white/10 hover:bg-white/5">
-                          <TableCell>
-                            <div className="flex gap-1">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEditCellLine(cellLine)}
-                                className="text-blue-300 hover:bg-white/10"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDeleteCellLine(cellLine.id)}
-                                className="text-red-300 hover:bg-red-500/20"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-medium text-white">{cellLine.name}</TableCell>
-                          <TableCell className="text-slate-300">{cellLine.type}</TableCell>
-                          <TableCell className="text-slate-300">P{cellLine.passage}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <div className="w-16 bg-slate-700/50 rounded-full h-2">
-                                <div 
-                                  className="bg-blue-400 h-2 rounded-full" 
-                                  style={{ width: `${cellLine.confluence}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-sm text-slate-300">{cellLine.confluence}%</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-slate-300">{cellLine.growthRate}x</TableCell>
-                          <TableCell>
-                            <div className="space-y-1">
-                              <div className="text-sm text-slate-300">{cellLine.lastPassageDate}</div>
-                              <Badge className={`text-xs ${getTimeBadgeVariant(daysSince)}`}>
-                                {daysSince} days ago
-                              </Badge>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={getMediumColor(cellLine.medium)}>
-                              {cellLine.medium}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1">
-                              {cellLine.reporters.map((reporter, idx) => (
-                                <Badge key={idx} className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">
-                                  {reporter}
-                                </Badge>
-                              ))}
-                            </div>
-                          </TableCell>
-                          <TableCell>{getStatusBadge(cellLine.status)}</TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-
+            <CellsTable
+              cellLines={cellLines}
+              onEdit={handleEditCellLine}
+              onDelete={handleDeleteCellLine}
+              onPassCells={() => setIsPassDialogOpen(true)}
+              getDaysSincePassage={getDaysSincePassage}
+              getStatusBadge={getStatusBadge}
+              getTimeBadgeVariant={getTimeBadgeVariant}
+              getMediumColor={getMediumColor}
+            />
             {/* WEEKLY CAL COMPONENT */}
           <WeeklyCal cellLines={cellLines} />
       </div>
