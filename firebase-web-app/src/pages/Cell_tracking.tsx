@@ -274,6 +274,8 @@ export function CellTrackingPage() {
 
 const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+const [isPassDialogOpen, setIsPassDialogOpen] = useState(false);
+const [selectedCellsForPassage, setSelectedCellsForPassage] = useState<number[]>([]);
 
 const [editingCell, setEditingCell] = useState<CellLine | null>(null);
 
@@ -293,7 +295,7 @@ const [newCellLine, setNewCellLine] = useState<CellLineFormState>({
     const passageDate = new Date(dateString);
     const today = new Date();
     const diffTime = Math.abs(today.getTime() - passageDate.getTime());
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24) - 1);
   };
 
   // Get time badge color based on days
@@ -302,6 +304,25 @@ const [newCellLine, setNewCellLine] = useState<CellLineFormState>({
     if (days <= 5) return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
     return "bg-red-500/20 text-red-300 border-red-500/30";
   };
+
+const handlePassSelectedCells = () => {
+  setCellLines(cellLines.map(cell => {
+    if (selectedCellsForPassage.includes(cell.id)) {
+      return {
+        ...cell,
+        passage: cell.passage + 1,
+        confluence: 20, // Reset confluence to low after passage
+        lastPassageDate: new Date().toISOString().split('T')[0],
+        lastUpdate: new Date().toISOString().split('T')[0],
+        status: 'healthy' // Reset status after passage
+      };
+    }
+    return cell;
+  }));
+  
+  setSelectedCellsForPassage([]);
+  setIsPassDialogOpen(false);
+};
 
   // Get status badge styling
   const getStatusBadge = (status: string) => {
@@ -429,7 +450,7 @@ const handleUpdateCellLine = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <div>
+        <div className="text-left">
           <h1 className="mb-2">Cell Line Tracker Dashboard</h1>
           <p className="text-muted-foreground">
             Track and manage your cell lines with real-time growth metrics and analytics! <b> Log in </b> to save your data.
@@ -437,7 +458,7 @@ const handleUpdateCellLine = () => {
         </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white shadow-lg">
+              <Button className="flex items-center gap-2 bg-purple-800 hover:bg-purple-600 text-white shadow-lg">
                 <Plus className="w-4 h-4" />
                 Add Cell Line
               </Button>
@@ -525,7 +546,7 @@ const handleUpdateCellLine = () => {
                     className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
                   />
                 </div>
-                <Button onClick={handleAddCellLine} className="w-full bg-blue-600 hover:bg-blue-500">
+                <Button onClick={handleAddCellLine} className="w-full bg-purple-800 hover:bg-purple-600">
                   Add Cell Line
                 </Button>
               </div>
@@ -534,7 +555,7 @@ const handleUpdateCellLine = () => {
       </div>
 
       {/* Overview Cards */}
-      <div className="container mx-auto px-8 max-w-6xl">
+      <div className="container mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 py-4">
 <           Card className="p-8 shadow-sm border bg-white/10 backdrop-blur-md border-white/20 rounded-xl">
             <div className="flex items-center">
@@ -592,7 +613,18 @@ const handleUpdateCellLine = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Main Data Table */}
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-lg">
-              <h3 className="text-white mb-4">Cell Lines Overview</h3>
+            
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-white mb-4">Cell Lines Overview</h3>
+                <Button 
+                  className="flex items-center gap-2 bg-purple-800 hover:bg-purple-600 text-white shadow-lg"
+                  onClick={() => setIsPassDialogOpen(true)}
+                >
+                  <CalendarDays className="w-4 h-4" />
+                  Pass Cells
+                </Button>
+              </div>
+                
                 <div className="rounded-md border border-white/20 overflow-x-auto">
                   <Table>
                     <TableHeader>
@@ -792,7 +824,8 @@ const handleUpdateCellLine = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">  
-                <div>
+                {/* to be separate function */}
+                {/* <div>
                   <Label htmlFor="edit-passage" className="text-slate-200">Passage #</Label>
                   <Input
                     id="edit-passage"
@@ -801,6 +834,20 @@ const handleUpdateCellLine = () => {
                     onChange={(e) => setNewCellLine({...newCellLine, passage: e.target.value})}
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
+                </div> */}
+                <div>
+                    <Label htmlFor="edit-medium" className="text-slate-200">Culture Medium</Label>
+                    <Select value={newCellLine.medium} onValueChange={(value) => setNewCellLine({...newCellLine, medium: value})}>
+                      <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                        <SelectValue placeholder="Select medium" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="DMEM" className="text-white">DMEM</SelectItem>
+                        <SelectItem value="RPMI" className="text-white">RPMI</SelectItem>
+                        <SelectItem value="EGM-2" className="text-white">EGM-2</SelectItem>
+                        <SelectItem value="Custom" className="text-white">Custom</SelectItem>
+                      </SelectContent>
+                    </Select>
                 </div>
                 <div>
                   <Label htmlFor="edit-confluence" className="text-slate-200">Confluence %</Label>
@@ -815,27 +862,13 @@ const handleUpdateCellLine = () => {
                   />
                 </div>
               </div>
-              <div>
-                  <Label htmlFor="edit-medium" className="text-slate-200">Culture Medium</Label>
-                  <Select value={newCellLine.medium} onValueChange={(value) => setNewCellLine({...newCellLine, medium: value})}>
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue placeholder="Select medium" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-600">
-                      <SelectItem value="DMEM" className="text-white">DMEM</SelectItem>
-                      <SelectItem value="RPMI" className="text-white">RPMI</SelectItem>
-                      <SelectItem value="EGM-2" className="text-white">EGM-2</SelectItem>
-                      <SelectItem value="Custom" className="text-white">Custom</SelectItem>
-                    </SelectContent>
-                  </Select>
-              </div>
 
               {/* /REPORTERS EDITTING */}
               <div className="grid grid-cols-2 gap-4">  
                 <div>
                   <Label htmlFor="edit-add-reporter" className="text-slate-200">Add Reporter</Label>
                   {/* Add reporter dropdown - only show if less than 3 reporters */}
-                  {newCellLine.reporters.length < 3 && (
+                  {newCellLine.reporters.length < 10 && (
                     <Select 
                       value="" 
                       onValueChange={(value) => {
@@ -860,12 +893,12 @@ const handleUpdateCellLine = () => {
                     </Select>
                   )}
                   
-                  {newCellLine.reporters.length >= 3 && (
-                    <p className="text-xs text-slate-400">Maximum of 3 reporters allowed</p>
+                  {newCellLine.reporters.length >= 10 && (
+                    <p className="text-xs text-slate-400">Maximum of 10 reporters allowed</p>
                   )}
                 </div>
                 <div>
-                  <Label htmlFor="edit-reporters" className="text-slate-200">Reporters (max 3)</Label>
+                  <Label htmlFor="edit-reporters" className="text-slate-200">Reporters</Label>
                   <div className="space-y-2">
                     {/* Current reporters display */}
                     <div className="flex flex-wrap gap-1 min-h-[32px] p-2 bg-slate-700/50 border border-slate-600 rounded-md">
@@ -906,12 +939,116 @@ const handleUpdateCellLine = () => {
                     className="bg-slate-700/50 border-slate-600 text-white"
                 />
               </div>
-              <Button onClick={handleUpdateCellLine} className="w-full bg-blue-600 hover:bg-blue-500">
+              <Button onClick={handleUpdateCellLine} className="w-full bg-purple-800 hover:bg-purple-600">
                 Update Cell Line
               </Button>
             </div>
           </DialogContent>
         </Dialog>
+
+      {/* Pass Cells Dialog */}
+      <Dialog open={isPassDialogOpen} onOpenChange={setIsPassDialogOpen}>
+        <DialogContent className="max-w-2xl bg-slate-800/95 backdrop-blur-md border-slate-600">
+          <DialogHeader>
+            <DialogTitle className="text-white">Pass Cell Lines</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-slate-200 text-sm">
+              Select cell lines to perform passage. This will increment passage # and reset Confluence to 10%
+            </p>
+            
+            {/* Cell Selection List */}
+            <div className="max-h-60 overflow-y-auto border border-slate-600 rounded-lg">
+              {cellLines.map((cell) => (
+                <div 
+                  key={cell.id} 
+                  className="flex items-center justify-between p-3 border-b border-slate-600/50 last:border-b-0 hover:bg-white/5"
+                >
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedCellsForPassage.includes(cell.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedCellsForPassage([...selectedCellsForPassage, cell.id]);
+                        } else {
+                          setSelectedCellsForPassage(selectedCellsForPassage.filter(id => id !== cell.id));
+                        }
+                      }}
+                      // color change!!
+                      className="w-4 h-4 rounded border-slate-500 bg-slate-700 text-orange-500 focus:ring-orange-400"
+                    />
+                    <div>
+                      <div className="text-white font-medium">{cell.name}</div>
+                      <div className="text-xs text-slate-400">
+                        P{cell.passage} • {cell.confluence}% confluence • {getDaysSincePassage(cell.lastPassageDate)} days ago
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {getStatusBadge(cell.status)}
+                    <Badge className={getTimeBadgeVariant(getDaysSincePassage(cell.lastPassageDate))}>
+                      {getDaysSincePassage(cell.lastPassageDate)}d
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Quick Actions */}
+            <div className="flex items-center gap-2 text-sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCellsForPassage(cellLines.map(c => c.id))}
+                className="text-blue-300 hover:bg-white/10"
+              >
+                Select All
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCellsForPassage([])}
+                className="text-blue-300 hover:bg-white/10"
+              >
+                Clear All
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCellsForPassage(
+                  cellLines.filter(c => c.status === 'ready-passage' || getDaysSincePassage(c.lastPassageDate) > 6)
+                    .map(c => c.id)
+                )}
+                className="text-orange-300 hover:bg-white/10"
+              >
+                Select Ready
+              </Button>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4">
+              <Button 
+                onClick={() => {
+                  setIsPassDialogOpen(false);
+                  setSelectedCellsForPassage([]);
+                }}
+                variant="ghost" 
+                className="flex-1 text-slate-300 hover:bg-white/10"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handlePassSelectedCells}
+                disabled={selectedCellsForPassage.length === 0}
+                className="flex-1 bg-purple-800 hover:bg-purple-600 disabled:opacity-50"
+              >
+                Pass {selectedCellsForPassage.length} Cell Line{selectedCellsForPassage.length !== 1 ? 's' : ''}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   </div>
   );
