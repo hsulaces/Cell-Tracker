@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 interface AddDialogProps {
     isAddDialogOpen: boolean;
     setIsAddDialogOpen: (open: boolean) => void;
-    newCellLine: any;
+    newCellLine: CellLineFormState;
     setNewCellLine: (cell: CellLineFormState) => void;
     handleAddCellLine: () => void;
 }
