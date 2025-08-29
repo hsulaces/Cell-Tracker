@@ -2,7 +2,7 @@
 //express server handles cadd api requests
 import express from 'express';
 import cors from 'cors';
-import caddRouter from './api/cadd';
+import caddRouter from './api/cadd.js';
 
 const app = express();
 const port = 3000;
