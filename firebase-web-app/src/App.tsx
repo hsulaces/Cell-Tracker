@@ -12,6 +12,7 @@ import Protocols from './pages/Protocols';
 import Variant_helper from './pages/Variant_helper';
 import './App.css';
 import Login from './pages/Login';
+import Footer from './ui/footer';
 
 
 // Initialize Firebase
@@ -48,6 +49,8 @@ function App() {
           <Route path="/variant-helper" element={<Variant_helper />} />
           <Route path="/login" element={<Login/>} />
         </Routes>
+
+        <Footer />
 
       </div>
     </Router>
